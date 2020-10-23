@@ -1238,6 +1238,34 @@
         InteractiveShell.ast_node_interactivity="all"
 
         # data 가져오기
-        crime_anal_police = pd.read_csv( '../data/' )
+        crime_anal_police = pd.read_csv( '../data/02. crime_in_Seoul.csv' , thousand = ',' , encoding = 'euc-kr' )
+        crime_anal_police.head()
+        type( crime_anal_police['폭력 검거'][0] ) # 천단위 구분기호가 있어서 문자열로 읽어옴
+        # read_csv 할때 thousand = ',' 옵션 추가
+        ```
 
+        + 데이터가 경찰서별로 되어있음 -> 구별로 데이터 변경
+        + 경찰서 명을 이용해서 경찰서 주소를 구글로 부터 얻어오는 작업을 진행
+        + 구글 맵을 사용하기 위한 패키지를 설치
+        + 아나콘다 명령어를 이용해서 아래 명령 실행
+
+        ``` C
+        pip install googlemaps
+        ```
+
+        + 구글 임포트 코드
+
+        ``` C
+        import googlemaps
+
+        gmapsKey = 'AIzaSyB-xZ-IKxYvd7GrvISS0M2GHZFkvukiSrI';
+        gmaps = googlemaps.Client( key = gmapskey )
+        ```
+
+        + 서울 중부 경찰서의 정보 구글로부터 얻어오기
+
+        ``` C
+        tmp = gmaps.geocode( '서울중부경찰서' , language='ko' )
+        type(tmp[0])
+        tmp[0]
         ```
