@@ -1157,7 +1157,7 @@
 
         plt.xlabel('인구수')
         plt.ylabel('CCTV')
-        plt.grid()
+        pl t.grid()
         plt.show()
         ```
 
@@ -1167,3 +1167,77 @@
         + 조금 더 설득력 있는 자료 만들기
         + 직선과 멀어 질수록 마커의 색상을 다르게 표현
         + 직선과 멀리 있는 상위 10를 선택해서 구 이름을 표시
+
+        ``` C
+        # 구별 인구수 배디 cctv 오차 계산
+        # 있어야 할 대수보다 얼마나 많고 지를 계산
+        data_result['소계'] - f1( data_result['인구수'] )
+        
+        # 위에서 계산한 오차를 절대값으로 변환 후 상위 10개 구 확인
+        # abs(값) : 절대값을 반환
+
+        data_result['오차'] = np.abs( data_result['소계'] - f1(data_result['인구수']) )
+        data_result.head()
+
+        # 오차가 큰 상위 10개 구만 추출 - 그래프에 구 이름을 표시하기 위해서
+        df_sort = data_result.sort_values( by='오차' , ascending = False )
+        df_sort.head(10)
+        ```
+
+        + 오차가 큰 상위 10개 도시에 구 이름 표시
+        + 그래프에 글자 출력하는 함수
+        + plt.text( x , y , txt , fontsize )
+        + 마커보다 약간 오른쪽 아래에 출력되도록 좌표 변경 후 출력
+
+        ``` C
+        # for n in range(10) :
+        #     plt.text(
+        #     df_sort['인구수'][n] * 1.02,
+        #     df_sort['소계'][n] * 0.98,
+        #     df_sort.index[n],
+        #     fontsize = 15
+        #     )
+
+        plt.figure( figsize = (10,10) )
+        plt.scatter( data_result['인구수'] , data_result['소계'] , s = 50 , c = data_result['오차'] )
+        plt.plot( fx , f1(fx) , ls='dashed' , lw = 3 , color = 'g' )
+
+        # text 표현
+        for n in range(10) :
+            plt.text( df_sort['인구수'][n] * 1.02 , df_sort['소계'][n] * 0.98 , df_sort.index[n] , fontsize = 15 )
+
+        plt.xlabel('인구수')
+        plt.ylabel('CCTV')
+        plt.colorbar( label='오차' )
+        plt.grid()
+
+        plt.show()
+        ```
+    + csv 파일로 데이터프레임 저장하기
+    ``` C
+    # df.to_csv( path_filename , encoding = 'utf-8' )
+    data_result.to_csv( './01_cctv_result.csv' , encoding='utf-8' ) 
+    ```
+
++ 교재2. 서울시 범죄 데이터 분석
+    + 강남 3구는 체감만큼 안전한가?
+        + 사용데이터 : 서울시 관서별 범죄 발생 검거율 현황
+        + 서울시 공공데이터 수집이 가능 (매년 형식이 약간씩 변경됨)
+        + 범죄(5대 범죄) - 살인, 강도, 강간, 절도, 폭력
+        + 관서별 : 경찰서별
+        + 구글 지도 데이터를 이용해서 경찰서 주소 얻어오는 방법
+        
+        ``` C 
+
+        # 필수 패키지 import 및 data 가져오기
+        import pandas as pd
+        import numpy as np
+
+        # 주피터 노트북에서 출력 모두를 표시하는 코드
+        from IPython.core.interactiveshell import InteractiveShell
+        InteractiveShell.ast_node_interactivity="all"
+
+        # data 가져오기
+        crime_anal_police = pd.read_csv( '../data/' )
+
+        ```
